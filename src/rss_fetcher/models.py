@@ -55,9 +55,9 @@ class FeedItem(Base):
     title: Mapped[str | None] = mapped_column(String, nullable=True)
     link: Mapped[str | None] = mapped_column(String, nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    published_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     author: Mapped[str | None] = mapped_column(String, nullable=True)
-    fetched_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     _metadata: Mapped[dict | None] = mapped_column("metadata", JSON, nullable=True)
     removed_from_feed: Mapped[bool] = mapped_column(Boolean, default=False)
 
