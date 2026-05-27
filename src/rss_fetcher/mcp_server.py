@@ -248,25 +248,26 @@ async def run_sse_server(host: str, port: int) -> None:
     """Run the MCP server with SSE transport."""
     from mcp.server.sse import SseServerTransport
     from starlette.applications import Starlette
-    from starlette.routing import Route
+    from starlette.requests import Request
+    from starlette.responses import Response
+    from starlette.routing import Mount, Route
 
     sse = SseServerTransport("/messages/")
 
-    async def handle_sse(request):
+    async def handle_sse(request: Request) -> Response:
         async with sse.connect_sse(
             request.scope, request.receive, request._send
         ) as streams:
             await app.run(
                 streams[0], streams[1], app.create_initialization_options()
             )
-
-    async def handle_messages(request):
-        await sse.handle_post_message(request.scope, request.receive, request._send)
+        # Return empty response to avoid NoneType error on disconnect
+        return Response()
 
     starlette_app = Starlette(
         routes=[
-            Route("/sse", endpoint=handle_sse),
-            Route("/messages/", endpoint=handle_messages, methods=["POST"]),
+            Route("/sse", endpoint=handle_sse, methods=["GET"]),
+            Mount("/messages/", app=sse.handle_post_message),
         ]
     )
 

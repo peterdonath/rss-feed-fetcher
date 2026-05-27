@@ -224,13 +224,14 @@ To connect an MCP client to the server running via SSE transport, configure it t
 {
   "mcpServers": {
     "rss-feed-fetcher": {
-      "url": "http://localhost:8080/mcp"
+      "type": "sse",
+      "url": "http://localhost:8080/sse"
     }
   }
 }
 ```
 
-This assumes the server is running with `MCP_TRANSPORT=sse` (the default) and `MCP_PORT=8080`.
+This assumes the server is running with `MCP_TRANSPORT=sse` and `MCP_PORT=8080`. The `"type": "sse"` field is required by some MCP clients (e.g. AnythingLLM) to indicate the transport mode.
 
 ## Database Schema
 
