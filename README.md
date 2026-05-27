@@ -107,13 +107,15 @@ alembic upgrade head
 
 ```bash
 # Run the full application (scheduler + MCP server)
-rss-feed-fetcher server
+rss-feed-fetcher run
 
 # Run only the MCP server (useful for debugging)
 rss-feed-fetcher mcp
 ```
 
-The `server` command starts both the periodic feed-fetching scheduler and the MCP server. The `mcp` command runs only the MCP server.
+The `run` command starts both the periodic feed-fetching scheduler and the MCP server on a shared event loop. The `mcp` command runs only the MCP server.
+
+> **Note:** The `server` command (deprecated) also starts both scheduler and MCP, but only runs the scheduler — use `run` instead.
 
 ### Docker
 

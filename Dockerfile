@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir .
 COPY src/ ./src/
 
 # Run the application
-CMD ["rss-feed-fetcher"]
+CMD ["rss-feed-fetcher", "run"]
