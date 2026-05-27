@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rss-feed-fetcher"
+version = "0.1.0"
+description = "Fetches RSS feeds and stores items in PostgreSQL with MCP interface"
+requires-python = ">=3.12"
+dependencies = [
+    "feedparser>=6.0.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.13.0",
+    "asyncpg>=0.29.0",
+    "apscheduler>=3.10.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    "mcp>=1.0.0",
+    "python-dotenv>=1.0.0",
+    "click>=8.1.0",
+    "psycopg2-binary>=2.9.9",
+    "uvicorn>=0.29.0",
+    "starlette>=0.37.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "aiosqlite>=0.19.0",
+    "ruff>=0.2.0",
+    "mypy>=1.8.0",
+]
+
+[project.scripts]
+rss-feed-fetcher = "rss_fetcher.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true

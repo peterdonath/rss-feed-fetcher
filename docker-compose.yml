@@ -1,0 +1,17 @@
+services:
+  rss-feed-fetcher:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - FETCH_INTERVAL_SECONDS=${FETCH_INTERVAL_SECONDS:-3600}
+      - FEED_URLS=${FEED_URLS:-}
+      - MCP_TRANSPORT=${MCP_TRANSPORT:-sse}
+      - MCP_HOST=${MCP_HOST:-0.0.0.0}
+      - MCP_PORT=${MCP_PORT:-8080}
+    restart: unless-stopped
+    volumes:
+      - ./src:/app/src:ro
+    ports:
+      - "${MCP_PORT:-8080}:${MCP_PORT:-8080}"
