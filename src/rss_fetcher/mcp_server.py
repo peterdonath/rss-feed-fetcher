@@ -170,7 +170,7 @@ async def _handle_list_feeds() -> CallToolResult:
 async def _handle_add_feed(request: AddFeedRequest) -> CallToolResult:
     """Handle add_feed tool call."""
     async with _session_factory() as session:
-        feed = Feed(id=UUID(int=0), url=request.url)
+        feed = Feed(url=request.url)
         session.add(feed)
         await session.commit()
 
