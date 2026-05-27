@@ -35,7 +35,7 @@ async def _mark_removed_items(
         FeedItem.__table__.update()
         .where(FeedItem.feed_id == feed_id)
         .where(FeedItem.guid.in_(removed_guids))
-        .values(removed_from_feed=True, updated_at=datetime.now(UTC))
+        .values(removed_from_feed=True)
     )
     logger.info("Marked %d items as removed from feed %s", len(removed_guids), feed_id)
     return len(removed_guids)
