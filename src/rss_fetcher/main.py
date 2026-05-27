@@ -33,8 +33,6 @@ def run() -> None:
     init_session_factory(settings.database_url)
 
     scheduler = create_scheduler(settings)
-    scheduler.start()
-    logger.info("Scheduler started — fetching every %d seconds", settings.fetch_interval_seconds)
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
@@ -47,17 +45,25 @@ def run() -> None:
     for sig in (signal.SIGINT, signal.SIGTERM):
         loop.add_signal_handler(sig, _shutdown, sig, None)
 
-    match settings.mcp_transport:
+    loop.run_until_complete(_run_async(scheduler, settings))
+
+
+async def _run_async(scheduler: object, settings: object) -> None:
+    """Start scheduler and MCP server within a running event loop."""
+    scheduler.start()  # type: ignore[union-attr]
+    logger.info("Scheduler started — fetching every %d seconds", settings.fetch_interval_seconds)  # type: ignore[arg-type]
+
+    match settings.mcp_transport:  # type: ignore[arg-type]
         case "stdio":
             logger.info("Starting MCP server (stdio transport)")
-            loop.run_until_complete(run_stdio_server())
+            await run_stdio_server()
         case "sse":
             logger.info(
                 "Starting MCP server (SSE transport on %s:%d)",
                 settings.mcp_host,
                 settings.mcp_port,
             )
-            loop.run_until_complete(run_sse_server(settings.mcp_host, settings.mcp_port))
+            await run_sse_server(settings.mcp_host, settings.mcp_port)
         case transport:
             click.echo(f"Unknown MCP transport: {transport}", err=True)
             raise click.exceptions.Exit(1)
