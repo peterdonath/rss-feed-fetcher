@@ -48,17 +48,13 @@ def create_scheduler(settings: Settings) -> AsyncIOScheduler:
     scheduler = AsyncIOScheduler()
     session_factory = _create_session_factory(settings.database_url)
 
-    def _fetch_with_factory() -> None:
-        import asyncio
-
-        asyncio.run(_fetch_all_feeds(session_factory))
-
     scheduler.add_job(
-        _fetch_with_factory,
+        _fetch_all_feeds,
         "interval",
         seconds=settings.fetch_interval_seconds,
         id="fetch_feeds",
         max_instances=1,
+        args=(session_factory,),
     )
 
     return scheduler

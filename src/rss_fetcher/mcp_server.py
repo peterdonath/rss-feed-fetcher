@@ -94,7 +94,8 @@ async def list_tools() -> ListToolsResult:
             ),
             Tool(
                 name="fetch_items",
-                description="Fetch feed items from the database with optional filtering.",
+                description="Fetch feed items from the database with optional filtering."
+                "Returns the articles posted on the RSS feeds in the given time range.",
                 inputSchema={
                     "type": "object",
                     "properties": {
